@@ -455,7 +455,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       chooseAuthError: 'Escolha pelo menos um metodo: carteira, Google ou GitHub.',
       socialStarting: 'Iniciando login com {provider}...',
       socialStubInfo:
-        'Login com {provider} esta em modo stub. O backend OAuth pode ser conectado nesta acao sem mudar o layout.',
+        'Login com {provider} habilitado. Se houver erro, revise as variaveis OAuth no ambiente.',
       walletSignerUnavailable: 'Esta carteira nao suporta assinatura de mensagem para login.',
       walletSignInFailed: 'Nao foi possivel autenticar com a carteira. Tente novamente.',
       registrationSuccess: 'Registro concluido para {username}. Agora voce pode acessar painel e perfil.'
@@ -508,7 +508,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       noRegistration: 'Registre uma conta antes de vincular metodos de autenticacao.',
       connectWalletFirst: 'Conecte uma carteira antes de vincular.',
       walletLinkedStatus: 'Carteira vinculada: {wallet}',
-      socialStubUpdated: '{provider} atualizado em modo stub para este perfil.',
+      socialStubUpdated: '{provider} vinculado para este perfil.',
       walletLinkFailed: 'Nao foi possivel vincular a carteira agora.'
     },
     dashboard: {
@@ -775,7 +775,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       chooseAuthError: 'Elige al menos un metodo: billetera, Google o GitHub.',
       socialStarting: 'Iniciando login con {provider}...',
       socialStubInfo:
-        'Login con {provider} esta en modo stub. El backend OAuth se puede conectar aqui sin cambiar el layout.',
+        'Login con {provider} habilitado. Si hay error, revisa las variables OAuth del entorno.',
       walletSignerUnavailable: 'Esta billetera no soporta firma de mensajes para login.',
       walletSignInFailed: 'No fue posible autenticar con la billetera. Intenta de nuevo.',
       registrationSuccess: 'Registro completado para {username}. Ahora puedes acceder a panel y perfil.'
@@ -828,7 +828,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       noRegistration: 'Registra una cuenta antes de vincular metodos de autenticacion.',
       connectWalletFirst: 'Conecta una billetera antes de vincular.',
       walletLinkedStatus: 'Billetera vinculada: {wallet}',
-      socialStubUpdated: '{provider} actualizado en modo stub para este perfil.',
+      socialStubUpdated: '{provider} vinculado para este perfil.',
       walletLinkFailed: 'No fue posible vincular la billetera ahora.'
     },
     dashboard: {
@@ -1095,7 +1095,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       chooseAuthError: 'Choose at least one auth method: wallet, Google, or GitHub.',
       socialStarting: 'Starting {provider} sign in...',
       socialStubInfo:
-        '{provider} login is in stub mode. OAuth backend can be plugged into this action without changing page layout.',
+        '{provider} sign in is enabled. If it fails, review OAuth environment variables.',
       walletSignerUnavailable: 'This wallet does not support message signing for auth.',
       walletSignInFailed: 'Wallet authentication failed. Please try again.',
       registrationSuccess: 'Registration completed for {username}. You can now access dashboard and profile.'
@@ -1148,7 +1148,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       noRegistration: 'Register an account before linking authentication methods.',
       connectWalletFirst: 'Connect a wallet before linking.',
       walletLinkedStatus: 'Wallet linked: {wallet}',
-      socialStubUpdated: '{provider} updated in stub mode for this profile.',
+      socialStubUpdated: '{provider} linked for this profile.',
       walletLinkFailed: 'Could not link wallet right now.'
     },
     dashboard: {

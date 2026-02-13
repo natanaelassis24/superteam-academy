@@ -9,8 +9,12 @@ interface OAuthProviderConfig {
   scopes: string[];
 }
 
-function appUrl(): string {
-  const raw = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+function appUrl(requestOrigin?: string): string {
+  const raw =
+    process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+    process.env.APP_URL?.trim() ||
+    requestOrigin ||
+    'http://localhost:3000';
   return raw.endsWith('/') ? raw.slice(0, -1) : raw;
 }
 
@@ -40,8 +44,8 @@ export function oauthCallbackPath(provider: OAuthProvider): string {
   return `/api/auth/${provider}/callback`;
 }
 
-export function oauthRedirectUri(provider: OAuthProvider): string {
-  return `${appUrl()}${oauthCallbackPath(provider)}`;
+export function oauthRedirectUri(provider: OAuthProvider, requestOrigin?: string): string {
+  return `${appUrl(requestOrigin)}${oauthCallbackPath(provider)}`;
 }
 
 export function providerStartPath(provider: OAuthProvider): string {
@@ -55,9 +59,13 @@ export function ensureProviderConfigured(provider: OAuthProvider): void {
   }
 }
 
-export function buildAuthorizationUrl(provider: OAuthProvider, state: string): string {
+export function buildAuthorizationUrl(
+  provider: OAuthProvider,
+  state: string,
+  requestOrigin?: string
+): string {
   const config = providerConfig(provider);
-  const redirectUri = oauthRedirectUri(provider);
+  const redirectUri = oauthRedirectUri(provider, requestOrigin);
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: redirectUri,
@@ -74,9 +82,13 @@ export function buildAuthorizationUrl(provider: OAuthProvider, state: string): s
   return `${config.authorizationUrl}?${params.toString()}`;
 }
 
-async function exchangeCode(provider: OAuthProvider, code: string): Promise<string> {
+async function exchangeCode(
+  provider: OAuthProvider,
+  code: string,
+  requestOrigin?: string
+): Promise<string> {
   const config = providerConfig(provider);
-  const redirectUri = oauthRedirectUri(provider);
+  const redirectUri = oauthRedirectUri(provider, requestOrigin);
 
   const body = new URLSearchParams({
     code,
@@ -142,9 +154,10 @@ async function fetchGithubEmail(accessToken: string): Promise<string | null> {
 
 export async function fetchOAuthProfile(
   provider: OAuthProvider,
-  code: string
+  code: string,
+  requestOrigin?: string
 ): Promise<OAuthProfile> {
-  const accessToken = await exchangeCode(provider, code);
+  const accessToken = await exchangeCode(provider, code, requestOrigin);
 
   const config = providerConfig(provider);
   const response = await fetch(config.userInfoUrl, {

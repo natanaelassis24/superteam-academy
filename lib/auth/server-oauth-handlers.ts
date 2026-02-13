@@ -44,7 +44,7 @@ export async function startOAuth(
     callbackUrl
   });
 
-  const authUrl = buildAuthorizationUrl(provider, state);
+  const authUrl = buildAuthorizationUrl(provider, state, request.nextUrl.origin);
   response.headers.set('location', authUrl);
   return response;
 }
@@ -66,7 +66,7 @@ export async function oauthCallback(
   }
 
   try {
-    const profile = await fetchOAuthProfile(provider, code);
+    const profile = await fetchOAuthProfile(provider, code, request.nextUrl.origin);
     const currentSession = await getSessionFromRequest(request);
     const user = await upsertOAuthUser(profile, {
       linkToUserId:

@@ -3,6 +3,14 @@ import { dirname, isAbsolute, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { hashPassword, verifyPassword } from '@/lib/auth/server-password';
 import {
+  firestoreFindOrCreateWalletUser,
+  firestoreGetSessionUserById,
+  firestoreLinkWalletToUser,
+  firestoreSignInWithCredentials,
+  firestoreUpsertOAuthUser,
+  isFirestoreAuthStoreEnabled
+} from '@/lib/auth/server-store-firestore';
+import {
   AuthProvider,
   AuthSessionUser,
   AuthStoreAccount,
@@ -164,6 +172,10 @@ function ensureAccountLink(
 }
 
 export async function getSessionUserById(userId: string): Promise<AuthSessionUser | null> {
+  if (isFirestoreAuthStoreEnabled()) {
+    return firestoreGetSessionUserById(userId);
+  }
+
   const store = await readStore();
   const user = userById(store, userId);
   if (!user) {
@@ -177,6 +189,10 @@ export async function upsertOAuthUser(
   profile: OAuthProfile,
   options?: { linkToUserId?: string }
 ): Promise<AuthSessionUser> {
+  if (isFirestoreAuthStoreEnabled()) {
+    return firestoreUpsertOAuthUser(profile, options);
+  }
+
   const store = await readStore();
   const now = nowIso();
   const linkedAccount = findAccount(store, profile.provider, profile.providerAccountId);
@@ -225,6 +241,10 @@ export async function findOrCreateWalletUser(input: {
   username?: string;
   password?: string;
 }): Promise<AuthSessionUser> {
+  if (isFirestoreAuthStoreEnabled()) {
+    return firestoreFindOrCreateWalletUser(input);
+  }
+
   const store = await readStore();
   const now = nowIso();
   const linkedAccount = findAccount(store, 'wallet', input.walletAddress);
@@ -295,6 +315,10 @@ export async function linkWalletToUser(
   userId: string,
   walletAddress: string
 ): Promise<AuthSessionUser> {
+  if (isFirestoreAuthStoreEnabled()) {
+    return firestoreLinkWalletToUser(userId, walletAddress);
+  }
+
   const store = await readStore();
   const user = userById(store, userId);
   if (!user) {
@@ -317,6 +341,10 @@ export async function signInWithCredentials(input: {
   email: string;
   password: string;
 }): Promise<AuthSessionUser> {
+  if (isFirestoreAuthStoreEnabled()) {
+    return firestoreSignInWithCredentials(input);
+  }
+
   const store = await readStore();
   const email = input.email.trim().toLowerCase();
   const password = input.password.trim();

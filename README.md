@@ -143,10 +143,16 @@ Key groups:
   - `NEXT_PUBLIC_APP_URL`
 - Auth:
   - `AUTH_SECRET`
+  - `FIREBASE_PROJECT_ID`
+  - `FIREBASE_CLIENT_EMAIL`
+  - `FIREBASE_PRIVATE_KEY`
   - `GOOGLE_CLIENT_ID`
   - `GOOGLE_CLIENT_SECRET`
   - `GITHUB_CLIENT_ID`
   - `GITHUB_CLIENT_SECRET`
+  - OAuth redirect URIs:
+    - Google: `${NEXT_PUBLIC_APP_URL}/api/auth/google/callback`
+    - GitHub: `${NEXT_PUBLIC_APP_URL}/api/auth/github/callback`
 - Learning backend:
   - `LEARNING_STORE_PATH`
 - CMS:
