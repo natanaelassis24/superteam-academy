@@ -60,13 +60,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'wallet signature verification failed' }, { status: 401 });
   }
 
-  const user = await findOrCreateWalletUser({
-    walletAddress,
-    name: body.name,
-    email: body.email,
-    username: body.username,
-    password: body.password
-  });
+  let user: Awaited<ReturnType<typeof findOrCreateWalletUser>>;
+  try {
+    user = await findOrCreateWalletUser({
+      walletAddress,
+      name: body.name,
+      email: body.email,
+      username: body.username,
+      password: body.password
+    });
+  } catch (error) {
+    console.error('wallet_signin_failed', error);
+    return NextResponse.json({ error: 'wallet_signin_failed' }, { status: 500 });
+  }
 
   const response = NextResponse.json({
     ok: true,

@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { dirname, isAbsolute, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { hashPassword, verifyPassword } from '@/lib/auth/server-password';
 import {
@@ -11,7 +11,23 @@ import {
   OAuthProfile
 } from '@/lib/auth/server-types';
 
-const STORE_PATH = join(process.cwd(), '.auth', 'store.json');
+const DEFAULT_LOCAL_STORE_PATH = join(process.cwd(), '.auth', 'store.json');
+const DEFAULT_VERCEL_STORE_PATH = '/tmp/superteam-auth-store.json';
+
+function resolveStorePath(): string {
+  const configured = process.env.AUTH_STORE_PATH?.trim();
+  if (configured && configured.length > 0) {
+    return isAbsolute(configured) ? configured : join(process.cwd(), configured);
+  }
+
+  if (process.env.VERCEL === '1' || process.env.VERCEL === 'true') {
+    return DEFAULT_VERCEL_STORE_PATH;
+  }
+
+  return DEFAULT_LOCAL_STORE_PATH;
+}
+
+const STORE_PATH = resolveStorePath();
 
 function emptyStore(): AuthStoreData {
   return {

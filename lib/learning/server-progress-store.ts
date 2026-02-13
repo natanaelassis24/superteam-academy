@@ -9,15 +9,20 @@ import {
 } from '@/lib/types';
 import { levelFromXP } from '@/lib/utils';
 
-const DEFAULT_STORE_PATH = join(process.cwd(), '.learning', 'store.json');
+const DEFAULT_LOCAL_STORE_PATH = join(process.cwd(), '.learning', 'store.json');
+const DEFAULT_VERCEL_STORE_PATH = '/tmp/superteam-learning-store.json';
 
 function resolveStorePath(): string {
   const configured = process.env.LEARNING_STORE_PATH?.trim();
-  if (!configured) {
-    return DEFAULT_STORE_PATH;
+  if (configured && configured.length > 0) {
+    return isAbsolute(configured) ? configured : join(process.cwd(), configured);
   }
 
-  return isAbsolute(configured) ? configured : join(process.cwd(), configured);
+  if (process.env.VERCEL === '1' || process.env.VERCEL === 'true') {
+    return DEFAULT_VERCEL_STORE_PATH;
+  }
+
+  return DEFAULT_LOCAL_STORE_PATH;
 }
 
 const STORE_PATH = resolveStorePath();
